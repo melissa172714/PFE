@@ -1,3 +1,4 @@
+Import-Module ScheduledTasks
 # Vérifie si le script est lancé en mode Administrateur
 If (-Not ([Security.Principal.WindowsPrincipal]([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     $arguments = "-NoProfile -ExecutionPolicy Bypass -File """ + $MyInvocation.MyCommand.Definition + """"

